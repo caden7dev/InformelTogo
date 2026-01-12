@@ -121,7 +121,7 @@
                     <div>
                         <p class="text-green-100 text-sm">Total Recettes</p>
                         <p class="text-2xl font-bold">
-                            ₣ {{ number_format($totalIncome ?? 0, 0, ',', ' ') }}
+                            {{ number_format($totalIncome ?? 0, 0, ',', ' ') }} FCFA
                         </p>
                         <p class="text-green-100 text-xs mt-1 flex items-center">
                             <i class="fas fa-arrow-up mr-1"></i>
@@ -139,7 +139,7 @@
                     <div>
                         <p class="text-red-100 text-sm">Total Dépenses</p>
                         <p class="text-2xl font-bold">
-                            ₣ {{ number_format($totalExpense ?? 0, 0, ',', ' ') }}
+                            {{ number_format($totalExpense ?? 0, 0, ',', ' ') }} FCFA
                         </p>
                         <p class="text-red-100 text-xs mt-1 flex items-center">
                             <i class="fas fa-arrow-down mr-1"></i>
@@ -157,7 +157,7 @@
                     <div>
                         <p class="text-purple-100 text-sm">Solde Global</p>
                         <p class="text-2xl font-bold">
-                            ₣ {{ number_format($balance ?? 0, 0, ',', ' ') }}
+                            {{ number_format($balance ?? 0, 0, ',', ' ') }} FCFA
                         </p>
                         <p class="text-purple-100 text-xs mt-1 flex items-center">
                             <i class="fas fa-balance-scale mr-1"></i>
@@ -311,7 +311,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm font-semibold {{ $transaction->type == 'income' ? 'text-green-600' : 'text-red-600' }}">
-                                    ₣ {{ number_format($transaction->montant, 0, ',', ' ') }}
+                                    {{ number_format($transaction->montant, 0, ',', ' ') }} FCFA
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">

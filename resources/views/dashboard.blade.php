@@ -71,7 +71,7 @@
                 <nav class="hidden md:flex items-center space-x-8">
                     <a href="{{ route('dashboard') }}" class="text-indigo-600 font-medium border-b-2 border-indigo-600 pb-1">Tableau de bord</a>
                     <a href="{{ route('transactions.index') }}" class="text-gray-600 hover:text-indigo-600 transition-colors">Transactions</a>
-                    <a href="{{ route('reports.financial') }}" class="text-gray-600 hover:text-indigo-600 transition-colors">Rapports</a>
+                    <a href="{{ route('reports.financial') }}" class="text-gray-600 hover:text-indigo-600 transition-colors">Voir rapports financiers</a>
                     <a href="{{ route('categories.index') }}" class="text-gray-600 hover:text-indigo-600 transition-colors">Catégories</a>
                     <a href="{{ route('budgets.index') }}" class="text-gray-600 hover:text-indigo-600 transition-colors">Budgets</a>
                 </nav>
@@ -197,14 +197,14 @@
             </div>
         </div>
 
-        <!-- Cartes de Statistiques -->
+       <!-- Cartes de Statistiques -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <!-- Carte Recettes -->
             <div class="gradient-income text-white p-6 rounded-2xl shadow-lg hover-lift">
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-blue-100 font-medium">Total Recettes</p>
-                        <p class="text-3xl font-bold mt-2">₣ <span id="total-income">{{ number_format($totalIncome, 0, ',', ' ') }}</span></p>
+                        <p class="text-3xl font-bold mt-2"><span id="total-income">{{ number_format($totalIncome, 0, ',', ' ') }}</span> FCFA</p>
                         <p class="text-blue-100 text-sm mt-2 flex items-center">
                             <i class="fas fa-arrow-up mr-1"></i>
                             <span id="income-trend">Chargement...</span>
@@ -216,12 +216,12 @@
                 </div>
             </div>
 
-            <!-- Carte Dépenses -->
+           <!-- Carte Dépenses -->
             <div class="gradient-expense text-white p-6 rounded-2xl shadow-lg hover-lift">
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-pink-100 font-medium">Total Dépenses</p>
-                        <p class="text-3xl font-bold mt-2">₣ <span id="total-expense">{{ number_format($totalExpense, 0, ',', ' ') }}</span></p>
+                        <p class="text-3xl font-bold mt-2"><span id="total-expense">{{ number_format($totalExpense, 0, ',', ' ') }}</span> FCFA</p>
                         <p class="text-pink-100 text-sm mt-2 flex items-center">
                             <i class="fas fa-arrow-down mr-1"></i>
                             <span id="expense-trend">Chargement...</span>
@@ -238,7 +238,7 @@
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-green-100 font-medium">Solde Net</p>
-                        <p class="text-3xl font-bold mt-2">₣ <span id="total-balance">{{ number_format($balance, 0, ',', ' ') }}</span></p>
+                        <p class="text-3xl font-bold mt-2"><span id="total-balance">{{ number_format($balance, 0, ',', ' ') }}</span> FCFA</p>
                         <p class="text-green-100 text-sm mt-2 flex items-center">
                             <i class="fas fa-chart-line mr-1"></i>
                             <span id="balance-status">Équilibre positif</span>
@@ -250,7 +250,7 @@
                 </div>
             </div>
 
-            <!-- Carte Transactions -->
+                        <!-- Carte Transactions -->
             <div class="gradient-card text-white p-6 rounded-2xl shadow-lg hover-lift">
                 <div class="flex justify-between items-start">
                     <div>
@@ -269,6 +269,7 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
             <!-- Graphique -->
             <div class="bg-white p-6 rounded-2xl shadow-lg">
                 <div class="flex justify-between items-center mb-6">
@@ -311,7 +312,7 @@
                         </div>
                         <div class="text-right">
                             <p class="font-semibold {{ $transaction->type == 'income' ? 'text-green-600' : 'text-red-600' }}">
-                                {{ $transaction->type == 'income' ? '+' : '-' }}₣ {{ number_format($transaction->montant, 0, ',', ' ') }}
+                                {{ $transaction->type == 'income' ? '+' : '-' }}{{ number_format($transaction->montant, 0, ',', ' ') }} FCFA
                             </p>
                             <div class="flex space-x-2 mt-1">
                                 <a href="{{ route('transactions.edit', $transaction) }}" class="text-blue-600 hover:text-blue-700 text-sm">
@@ -356,7 +357,7 @@
                             <div class="h-2 rounded-full" style="width: {{ $category['percentage'] }}%; background-color: {{ $category['color'] }}"></div>
                         </div>
                         <div class="text-xs text-gray-500 mt-1">
-                            ₣ {{ number_format($category['total_amount'], 0, ',', ' ') }}
+                            {{ number_format($category['total_amount'], 0, ',', ' ') }} FCFA
                         </div>
                     </div>
                     @empty
@@ -391,9 +392,9 @@
                         </div>
                     </div>
                     <div class="pt-4">
-                        <button onclick="notificationSystem.createGoalNotification()" class="w-full text-center text-sm text-indigo-600 hover:text-indigo-700 py-2">
-                            <i class="fas fa-bullseye mr-1"></i>Définir un nouvel objectif
-                        </button>
+                        <a href="{{ route('goals.create') }}" class="w-full text-center text-sm text-indigo-600 hover:text-indigo-700 py-2 block hover:underline">
+    <i class="fas fa-bullseye mr-1"></i>Définir un nouvel objectif
+</a>
                     </div>
                 </div>
             </div>
@@ -663,8 +664,7 @@
                     
                     html += `
                         <div class="p-2 border-t">
-                            <button onclick="notificationSystem.markAllAsRead()" class="w-full text-center text-sm text-indigo-600 hover:text-indigo-700 py-2">
-                                Marquer tout comme lu
+                            <a href="{{ route('goals.create') }}" class="w-full text-center text-sm text-indigo-600 hover:text-indigo-700 py-2 block">
                             </button>
                         </div>
                     `;

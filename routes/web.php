@@ -147,6 +147,10 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/{goal}', [GoalController::class, 'update'])->name('update');
         Route::delete('/{goal}', [GoalController::class, 'destroy'])->name('destroy');
         Route::get('/{goal}/progress', [GoalController::class, 'progress'])->name('progress');
+         Route::post('/{goal}/add-progress', [GoalController::class, 'addProgress'])->name('addProgress');
+    Route::post('/{goal}/mark-completed', [GoalController::class, 'markAsCompleted'])->name('markCompleted');
+    Route::post('/{goal}/reactivate', [GoalController::class, 'reactivate'])->name('reactivate');
+    Route::get('/active/list', [GoalController::class, 'getActiveGoals'])->name('activeList');
     });
 
     // ==================== RAPPORTS ====================

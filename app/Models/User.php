@@ -137,4 +137,9 @@ public function unreadNotifications()
 {
     return $this->notifications()->where('read', false);
 }
+
+public function goals()
+{
+    return $this->hasMany(Goal::class);
+}
 }

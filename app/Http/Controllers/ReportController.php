@@ -8,78 +8,56 @@ use Carbon\Carbon;
 
 class ReportController extends Controller
 {
-    public function financial(Request $request)
-    {
-        $period = $request->get('period', 'month');
-        $startDate = $request->get('start_date');
-        $endDate = $request->get('end_date');
-        
-        $user = Auth::user();
-        
-        // Déterminer les dates en fonction de la période
-        list($start, $end) = $this->getDateRange($period, $startDate, $endDate);
-        
-        // Récupérer les transactions
-        $transactions = $user->transactions()
-            ->with('category')
-            ->whereBetween('date_transaction', [$start, $end])
-            ->get();
-        
-        // Calculer les totaux
-        $income = $transactions->where('type', 'income')->sum('montant');
-        $expense = $transactions->where('type', 'expense')->sum('montant');
-        $balance = $income - $expense;
-        
-        // Transactions par catégorie
-        $incomeByCategory = $transactions->where('type', 'income')
-            ->groupBy('category_id')
-            ->map(function ($items, $categoryId) {
-                return [
-                    'category' => $items->first()->category->name ?? 'Non catégorisé',
-                    'amount' => $items->sum('montant'),
-                    'count' => $items->count(),
-                ];
-            })
-            ->sortByDesc('amount')
-            ->values();
-            
-        $expenseByCategory = $transactions->where('type', 'expense')
-            ->groupBy('category_id')
-            ->map(function ($items, $categoryId) {
-                return [
-                    'category' => $items->first()->category->name ?? 'Non catégorisé',
-                    'amount' => $items->sum('montant'),
-                    'count' => $items->count(),
-                ];
-            })
-            ->sortByDesc('amount')
-            ->values();
-        
-        // Transactions par jour
-        $dailyTransactions = $transactions->groupBy(function ($transaction) {
-            return Carbon::parse($transaction->date_transaction)->format('Y-m-d');
-        })->map(function ($items, $date) {
-            return [
-                'date' => $date,
-                'income' => $items->where('type', 'income')->sum('montant'),
-                'expense' => $items->where('type', 'expense')->sum('montant'),
-                'balance' => $items->where('type', 'income')->sum('montant') - $items->where('type', 'expense')->sum('montant'),
+   public function financial(Request $request)
+{
+    $period = $request->get('period', 'month');
+    $startDate = $request->get('start_date');
+    $endDate = $request->get('end_date');
+
+    $user = Auth::user();
+
+    // Déterminer la période
+    [$start, $end] = $this->getDateRange($period, $startDate, $endDate);
+
+    // Transactions du commerçant
+    $transactions = $user->transactions()
+        ->with('category')
+        ->whereBetween('date_transaction', [$start, $end])
+        ->orderBy('date_transaction', 'desc')
+        ->get()
+        ->map(function ($transaction) {
+            return (object) [
+                'id' => $transaction->id,
+                'type' => $transaction->type, // income | expense
+                'amount' => $transaction->montant, // ✅ compatibilité vue
+                'description' => $transaction->description ?? 'Transaction',
+                'created_at' => $transaction->date_transaction,
+                'category' => $transaction->category,
             ];
-        })->sortBy('date')->values();
-        
-        return view('reports.financial', compact(
-            'income',
-            'expense',
-            'balance',
-            'incomeByCategory',
-            'expenseByCategory',
-            'dailyTransactions',
-            'period',
-            'start',
-            'end',
-            'transactions'
-        ));
-    }
+        });
+
+    // Totaux globaux
+    $totalIncome = $transactions
+        ->where('type', 'income')
+        ->sum('amount');
+
+    $totalExpense = $transactions
+        ->where('type', 'expense')
+        ->sum('amount');
+
+    $balance = $totalIncome - $totalExpense;
+
+    return view('reports.financial', compact(
+        'transactions',
+        'totalIncome',
+        'totalExpense',
+        'balance',
+        'period',
+        'start',
+        'end'
+    ));
+}
+
 
     public function categorical(Request $request)
     {

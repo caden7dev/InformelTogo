@@ -40,6 +40,24 @@ class DashboardController extends Controller
             return view('dashboard', $this->getEmptyDashboardData())
                 ->with('error', 'Erreur lors du chargement des données');
         }
+       
+    $recentGoals = Auth::user()->goals()
+        ->where('completed', false)
+        ->orderBy('deadline')
+        ->limit(3)
+        ->get();
+
+    return view('dashboard', compact(
+        'totalIncome',
+        'totalExpense',
+        'balance',
+        'transactions',
+        'expenseCategories',
+        'chartLabels',
+        'chartIncome',
+        'chartExpense',
+        'recentGoals' // Ajouter ceci
+    ));
     }
 
     /**

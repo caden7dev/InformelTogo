@@ -67,7 +67,7 @@
         <div class="flex justify-between items-start">
             <div>
                 <p class="text-gray-600 font-medium">Volume Financier</p>
-                <p class="text-3xl font-bold mt-2 text-gray-900">₣ {{ number_format(($stats['total_income'] ?? 0) + ($stats['total_expense'] ?? 0), 0, ',', ' ') }}</p>
+                <p class="text-3xl font-bold mt-2 text-gray-900">{{ number_format(($stats['total_income'] ?? 0) + ($stats['total_expense'] ?? 0), 0, ',', ' ') }} FCFA</p>
                 <p class="text-orange-600 text-sm mt-2 flex items-center">
                     <i class="fas fa-chart-line mr-1"></i>
                     Chiffre d'affaires
@@ -83,7 +83,7 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
     <!-- Graphique Transactions -->
     <div class="bg-white p-6 rounded-2xl shadow-lg">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Évolution des Transactions</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Évolution des Transactions</h3> 
         <canvas id="transactionsChart" class="w-full h-64"></canvas>
     </div>
 
@@ -202,7 +202,7 @@
             </div>
             <div class="text-right">
                 <p class="font-semibold {{ $transaction->type == 'income' ? 'text-green-600' : 'text-red-600' }}">
-                    {{ $transaction->type == 'income' ? '+' : '-' }}₣ {{ number_format($transaction->montant, 0, ',', ' ') }}
+                    {{ $transaction->type == 'income' ? '+' : '-' }}{{ number_format($transaction->montant, 0, ',', ' ') }} FCFA
                 </p>
             </div>
         </div>
@@ -314,7 +314,7 @@
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    return `${context.dataset.label}: ₣${context.parsed.y.toLocaleString()}`;
+                                    return `${context.dataset.label}: ${context.parsed.y.toLocaleString()} FCFA`;
                                 }
                             }
                         }
@@ -324,7 +324,7 @@
                             beginAtZero: true,
                             ticks: {
                                 callback: function(value) {
-                                    return '₣' + value.toLocaleString();
+                                    return value.toLocaleString() + ' FCFA';
                                 }
                             }
                         }
@@ -342,7 +342,7 @@
         {
             id: 1,
             title: 'Nouvelle transaction',
-            message: 'Un commerçant a effectué une transaction de 50 000 F',
+            message: 'Un commerçant a effectué une transaction de 50 000 FCFA',
             time: 'Il y a 5 min',
             read: false,
             type: 'transaction'

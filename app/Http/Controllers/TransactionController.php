@@ -353,6 +353,14 @@ public function filter(Request $request)
         return response()->json($transactions);
     }
 
+      public function show($id)
+    {
+        $transaction = Transaction::findOrFail($id);
+        return view('transactions.show', compact('transaction'));
+    }
+    
+    // Ou avec injection de dépendance :
+    
     /**
      * Formate un montant en FCFA
      */

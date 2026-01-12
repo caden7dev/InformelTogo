@@ -93,12 +93,12 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-500 text-sm">Total Recettes</p>
-                        <p class="text-2xl font-bold text-green-600">
-                            @currency($totalIncome ?? 0)
+                          <p id="globalBalance" class="text-2xl font-bold {{ ($globalBalance ?? 0) >= 0 ? 'text-green-600' : 'text-red-600' }}">
+                            @currency($globalBalance ?? 0)
                         </p>
                     </div>
-                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-arrow-down text-green-600"></i>
+                    <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-balance-scale text-indigo-600"></i>
                     </div>
                 </div>
             </div>
@@ -190,7 +190,7 @@
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Utilisateur</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant (FCFA)</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catégorie</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
@@ -225,7 +225,11 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium 
                                 {{ $transaction->type == 'income' ? 'text-green-600' : 'text-red-600' }}">
-                                @currency($transaction->montant)
+                                @if($transaction->type == 'income')
+                                +@currency($transaction->montant)
+                                @else
+                                -@currency($transaction->montant)
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {{ $transaction->category->name ?? 'Catégorie inconnue' }}
